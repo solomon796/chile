@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patagonia Interactive Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-XQoYMqMTK8LvdlDXvXO1e3U1b0w36p5Z3E2f3v6t27M=" crossorigin="">
+  <style>
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    #app{display:grid;grid-template-columns:320px 1fr;grid-template-rows:100vh}
+    #sidebar{padding:14px;border-right:1px solid #e6e6e6;overflow:auto}
+    #map{height:100vh;width:100%}
+    h1{font-size:18px;margin:0 0 8px}
+    .note{color:#555;font-size:12px;margin-bottom:10px}
+    .item{padding:8px;border-radius:10px;cursor:pointer;display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:center}
+    .item:hover{background:#f6f6f6}
+    .emoji{font-size:22px;line-height:1}
+    .title{font-weight:600}
+    .dates{font-size:12px;color:#666}
+    .legend{margin-top:8px;font-size:12px;color:#666}
+    .btns{display:flex;gap:8px;margin-top:10px}
+    button{background:#111;color:#fff;border:none;border-radius:10px;padding:8px 10px;font-weight:600;cursor:pointer}
+    button.secondary{background:#f1f1f1;color:#111}
+    .popup h3{margin:0 0 6px;font-size:16px}
+    .popup .dates{font-size:12px;color:#666;margin-bottom:6px}
+    .popup .desc{font-size:13px;line-height:1.35}
+    @media (max-width:900px){#app{grid-template-columns:1fr;grid-template-rows:40vh 60vh}#sidebar{border-right:none;border-bottom:1px solid #e6e6e6}}
+    .error{background:#fee;border:1px solid #f99;color:#900;padding:8px;border-radius:8px;margin-top:8px;display:none}
+  </style>
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <h1>Patagonia – Interactive Map</h1>
+    <div class="note">Click a stop to view details. Edit <code>stops.json</code> to update the site without touching code.</div>
+    <div class="btns">
+      <button id="fit">Fit Route</button>
+      <button class="secondary" id="toggle">Toggle Path</button>
+    </div>
+    <div class="legend">Order follows the line from 🌵 → 🗿.</div>
+    <div id="list"></div>
+    <div id="err" class="error"></div>
+  </aside>
+  <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7kPupHkHfZ3G6HkUO5rK0vE1sE0pMB6+Z8Z1D8=" crossorigin=""></script>
+<script>
+const errBox = document.getElementById('err');
+const list = document.getElementById('list');
+
+const map = L.map('map', { worldCopyJump:true, preferCanvas:true }).setView([-41,-72], 4.8);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+const emojiIcon = (emoji) => L.divIcon({
+  html: `<div style="font-size:28px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35));">${emoji}</div>`,
+  className:'emoji-pin', iconSize:[28,28], iconAnchor:[14,14]
+});
+
+let route, markers=[];
+
+async function loadStops(){
+  try{
+    const res = await fetch('stops.json', {cache:'no-store'});
+    if(!res.ok) throw new Error('Could not load stops.json');
+    const stops = await res.json();
+    if(!Array.isArray(stops) || stops.length===0) throw new Error('stops.json is empty');
+    render(stops);
+  }catch(e){
+    errBox.textContent = e.message + ' — make sure stops.json exists in the same folder.';
+    errBox.style.display = 'block';
+  }
+}
+
+function render(stops){
+  // clear
+  markers.forEach(m=>map.removeLayer(m)); markers=[];
+  if(route && map.hasLayer(route)) map.removeLayer(route);
+  list.innerHTML='';
+
+  // markers + list
+  stops.forEach((s,i)=>{
+    const m = L.marker([s.lat,s.lng], {icon: emojiIcon(s.emoji), title: s.name}).addTo(map);
+    m.bindPopup(`<div class="popup"><h3>${s.emoji} ${s.name}</h3><div class="dates">${s.dates||''}</div><div class="desc">${s.desc||''}</div></div>`);
+    markers.push(m);
+
+    const row = document.createElement('div');
+    row.className='item';
+    row.innerHTML = `<div class="emoji">${s.emoji}</div><div><div class="title">${i+1}. ${s.name}</div><div class="dates">${s.dates||''}</div></div>`;
+    row.onclick = ()=>{ map.setView([s.lat,s.lng], s.key==='rapanui'?7:6, {animate:true}); m.openPopup(); };
+    list.appendChild(row);
+  });
+
+  // route
+  const latlngs = stops.map(s=>[s.lat,s.lng]);
+  route = L.polyline(latlngs, {color:'#0a58ca', weight:3, opacity:0.9, dashArray:'6,6'}).addTo(map);
+  fit();
+}
+
+function fit(){ if(route) map.fitBounds(route.getBounds(), {padding:[20,20]}); }
+document.getElementById('fit').onclick = fit;
+document.getElementById('toggle').onclick = ()=>{
+  if(map.hasLayer(route)) map.removeLayer(route); else route.addTo(map);
+};
+
+loadStops();
+</script>
+</body>
+</html>

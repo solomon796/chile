@@ -1,0 +1,101 @@
+[
+  {
+    "key": "atacama",
+    "name": "Atacama Desert",
+    "emoji": "🌵",
+    "lat": -22.91,
+    "lng": -68.2,
+    "dates": "19–22 Jan",
+    "desc": "Geysers del Tatio, Valle de la Luna, altiplanic lagoons."
+  },
+  {
+    "key": "ba",
+    "name": "Buenos Aires",
+    "emoji": "💃🕺",
+    "lat": -34.6,
+    "lng": -58.38,
+    "dates": "22–24 Jan",
+    "desc": "VIP arrival, tango, San Telmo, history tour."
+  },
+  {
+    "key": "areco",
+    "name": "San Antonio de Areco",
+    "emoji": "🤠",
+    "lat": -34.25,
+    "lng": -59.47,
+    "dates": "25 Jan",
+    "desc": "Estancia La Bamba, gaucho culture."
+  },
+  {
+    "key": "madryn",
+    "name": "Puerto Madryn",
+    "emoji": "🐧",
+    "lat": -42.77,
+    "lng": -65.04,
+    "dates": "26 Jan",
+    "desc": "Penguin & sea‑lion colonies."
+  },
+  {
+    "key": "ushuaia",
+    "name": "Ushuaia",
+    "emoji": "🧭",
+    "lat": -54.8,
+    "lng": -68.3,
+    "dates": "27–28 Jan",
+    "desc": "Beagle Channel, zodiac wildlife."
+  },
+  {
+    "key": "calafate",
+    "name": "El Calafate & El Chaltén",
+    "emoji": "🧊",
+    "lat": -50.34,
+    "lng": -72.27,
+    "dates": "29–30 Jan",
+    "desc": "Perito Moreno with Dr. Skvarca team."
+  },
+  {
+    "key": "tdp",
+    "name": "Torres del Paine",
+    "emoji": "🏔️",
+    "lat": -51.25,
+    "lng": -72.35,
+    "dates": "31 Jan–2 Feb",
+    "desc": "Puma‑tracking, Big‑5."
+  },
+  {
+    "key": "osorno",
+    "name": "Osorno / Lake Llanquihue",
+    "emoji": "🌋",
+    "lat": -41.32,
+    "lng": -72.99,
+    "dates": "3–7 Feb",
+    "desc": "Hotel AWA, Mapuche ceremony."
+  },
+  {
+    "key": "chiloe",
+    "name": "Chiloé Island",
+    "emoji": "⛪",
+    "lat": -42.48,
+    "lng": -73.76,
+    "dates": "5–6 Feb",
+    "desc": "UNESCO churches, artisan villages."
+  },
+  {
+    "key": "santiago",
+    "name": "Santiago & Wine Valleys",
+    "emoji": "🍷",
+    "lat": -33.45,
+    "lng": -70.66,
+    "dates": "7–10 Feb (+15 Feb)",
+    "desc": "City culture, Maipo/Millahue wines."
+  },
+  {
+    "key": "rapanui",
+    "name": "Easter Island (Rapa Nui)",
+    "emoji": "🗿",
+    "lat": -27.15,
+    "lng": -109.43,
+    "dates": "11–14 Feb",
+    "desc": "Tapati Festival, Ahu Tongariki, Orongo."
+  }
+]
